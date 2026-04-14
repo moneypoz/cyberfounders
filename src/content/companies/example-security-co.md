@@ -7,7 +7,8 @@ founded: 2022
 location: "Austin, TX"
 stage: "seed"
 category: ["EDR", "AI/ML", "Endpoint Security"]
-featured: true
+featured: false
+approved: false
 publishedAt: 2024-01-15
 ---
 

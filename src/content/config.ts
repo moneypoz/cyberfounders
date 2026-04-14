@@ -14,7 +14,9 @@ const companies = defineCollection({
       .enum(["pre-seed", "seed", "series-a", "series-b", "growth", "public"])
       .optional(),
     category: z.array(z.string()),
+    founders: z.array(z.string()).optional(),
     featured: z.boolean().default(false),
+    approved: z.boolean().default(false),
     publishedAt: z.date(),
   }),
 });
