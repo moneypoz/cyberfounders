@@ -1,0 +1,102 @@
+---
+interface Props {
+  founderName: string;
+  companyName: string;
+  slug: string;
+  tagline: string;
+  category: string[];
+  stage?: string;
+  location?: string;
+  featured?: boolean;
+}
+
+const {
+  founderName,
+  companyName,
+  slug,
+  tagline,
+  category,
+  stage,
+  location,
+  featured = false,
+} = Astro.props;
+
+const stageColors: Record<string, string> = {
+  "pre-seed": "bg-zinc-700 text-zinc-300",
+  seed: "bg-emerald-900 text-emerald-300",
+  "series-a": "bg-blue-900 text-blue-300",
+  "series-b": "bg-violet-900 text-violet-300",
+  growth: "bg-orange-900 text-orange-300",
+  public: "bg-yellow-900 text-yellow-300",
+};
+
+// Derive initials from founder name (up to 2 chars)
+const initials = founderName
+  .split(" ")
+  .map((p) => p[0])
+  .join("")
+  .toUpperCase()
+  .slice(0, 2);
+---
+
+<a href={`/founders/${slug}`} class="group block">
+  <article
+    class:list={[
+      "card-hover relative flex flex-col gap-4",
+      featured && "ring-1 ring-brand-500/40",
+    ]}
+  >
+    {
+      featured && (
+        <span class="absolute right-4 top-4 rounded-full bg-brand-600/20 px-2 py-0.5 text-xs font-medium text-brand-400">
+          Featured
+        </span>
+      )
+    }
+
+    <!-- Founder avatar -->
+    <div
+      class="flex size-14 items-center justify-center rounded-full bg-gradient-to-br from-brand-600 to-cyan-600 text-lg font-bold text-white shadow-lg"
+    >
+      {initials}
+    </div>
+
+    <!-- Founder name — primary -->
+    <div>
+      <h3
+        class="text-lg font-bold text-white group-hover:text-brand-400 transition-colors leading-tight"
+      >
+        {founderName}
+      </h3>
+      <!-- Company name — secondary -->
+      <p class="mt-0.5 text-sm font-medium text-zinc-400">
+        {companyName}
+        {location && <span class="text-zinc-600"> · {location}</span>}
+      </p>
+    </div>
+
+    <p class="text-sm leading-relaxed text-zinc-400 line-clamp-2">{tagline}</p>
+
+    <div class="flex flex-wrap items-center gap-2">
+      {
+        stage && (
+          <span
+            class:list={[
+              "rounded-full px-2 py-0.5 text-xs font-medium capitalize",
+              stageColors[stage] ?? "bg-zinc-700 text-zinc-300",
+            ]}
+          >
+            {stage}
+          </span>
+        )
+      }
+      {
+        category.slice(0, 2).map((cat) => (
+          <span class="rounded-full bg-zinc-800 px-2 py-0.5 text-xs text-zinc-400">
+            {cat}
+          </span>
+        ))
+      }
+    </div>
+  </article>
+</a>

@@ -1,0 +1,183 @@
+---
+import Base from "@/layouts/Base.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const companies = await getCollection("companies");
+  return companies.map((company) => ({
+    params: { slug: company.id.replace(/\.(md|mdx)$/, "") },
+    props: { company },
+  }));
+}
+
+const { company } = Astro.props;
+const { Content } = await render(company);
+const {
+  name,
+  tagline,
+  description,
+  website,
+  founded,
+  location,
+  stage,
+  category,
+  founders,
+} = company.data;
+
+const primaryFounder = founders?.[0] ?? name;
+const coFounders = founders?.slice(1) ?? [];
+
+// Derive initials for the avatar
+const initials = primaryFounder
+  .split(" ")
+  .map((p) => p[0])
+  .join("")
+  .toUpperCase()
+  .slice(0, 2);
+
+// Page title and OG description are founder-first
+const pageTitle = primaryFounder;
+const pageDescription = `${primaryFounder}${founders && founders.length > 1 ? " et al." : ""} — ${tagline}`;
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <div class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+    <a
+      href="/founders"
+      class="mb-10 inline-flex items-center gap-1 text-sm text-zinc-400 transition-colors hover:text-white"
+    >
+      ← Back to Founders
+    </a>
+
+    <!-- Founder header — primary -->
+    <header class="mb-12">
+      <div class="flex items-start gap-6">
+        <!-- Founder avatar -->
+        <div
+          class="flex size-20 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-600 to-cyan-600 text-2xl font-bold text-white shadow-xl"
+        >
+          {initials}
+        </div>
+
+        <div>
+          <!-- Founder name — h1 -->
+          <h1 class="text-3xl font-extrabold text-white">{primaryFounder}</h1>
+
+          {
+            coFounders.length > 0 && (
+              <p class="mt-1 text-sm text-zinc-400">
+                with{" "}
+                {coFounders.join(", ")}
+              </p>
+            )
+          }
+
+          <!-- Company — secondary -->
+          <div class="mt-3 flex flex-wrap items-center gap-3">
+            <a
+              href={website}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-lg font-semibold text-brand-400 hover:text-brand-300 transition-colors"
+            >
+              {name} ↗
+            </a>
+            {
+              stage && (
+                <span class="rounded-full border border-zinc-700 px-2 py-0.5 text-xs font-medium capitalize text-zinc-400">
+                  {stage}
+                </span>
+              )
+            }
+          </div>
+
+          <p class="mt-2 text-base text-zinc-400">{tagline}</p>
+
+          <!-- Sector tags -->
+          <div class="mt-3 flex flex-wrap gap-2">
+            {
+              category.map((cat) => (
+                <span class="rounded-full bg-zinc-800 px-2 py-0.5 text-xs text-zinc-400">
+                  {cat}
+                </span>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="grid grid-cols-1 gap-10 lg:grid-cols-3">
+      <!-- Main content -->
+      <article class="lg:col-span-2 prose prose-invert prose-zinc max-w-none">
+        <Content />
+      </article>
+
+      <!-- Sidebar -->
+      <aside class="space-y-4">
+        <div class="card">
+          <h2 class="mb-4 text-sm font-semibold uppercase tracking-wide text-zinc-400">
+            Company Details
+          </h2>
+          <dl class="space-y-3 text-sm">
+            <div>
+              <dt class="text-zinc-500">Company</dt>
+              <dd class="font-medium text-zinc-200">{name}</dd>
+            </div>
+            {
+              website && (
+                <div>
+                  <dt class="text-zinc-500">Website</dt>
+                  <dd>
+                    <a
+                      href={website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="break-all text-brand-400 hover:text-brand-300"
+                    >
+                      {website.replace(/^https?:\/\//, "")}
+                    </a>
+                  </dd>
+                </div>
+              )
+            }
+            {
+              location && (
+                <div>
+                  <dt class="text-zinc-500">HQ</dt>
+                  <dd class="text-zinc-200">{location}</dd>
+                </div>
+              )
+            }
+            {
+              founded && (
+                <div>
+                  <dt class="text-zinc-500">Founded</dt>
+                  <dd class="text-zinc-200">{founded}</dd>
+                </div>
+              )
+            }
+            {
+              stage && (
+                <div>
+                  <dt class="text-zinc-500">Stage</dt>
+                  <dd class="capitalize text-zinc-200">{stage}</dd>
+                </div>
+              )
+            }
+            {
+              founders && founders.length > 0 && (
+                <div>
+                  <dt class="text-zinc-500">
+                    {founders.length === 1 ? "Founder" : "Founders"}
+                  </dt>
+                  <dd class="text-zinc-200">{founders.join(", ")}</dd>
+                </div>
+              )
+            }
+          </dl>
+        </div>
+      </aside>
+    </div>
+  </div>
+</Base>

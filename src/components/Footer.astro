@@ -8,7 +8,7 @@ const currentYear = new Date().getFullYear();
       <div>
         <span class="text-lg font-bold text-gradient">CyberInventors</span>
         <p class="mt-2 text-sm text-zinc-400">
-          Tracking the startups building the future of cybersecurity.
+          Spotlighting the women founders and leaders shaping the future of cybersecurity.
         </p>
       </div>
 
@@ -17,10 +17,10 @@ const currentYear = new Date().getFullYear();
         <ul class="mt-3 space-y-2">
           {
             [
-              { href: "/directory", label: "Company Directory" },
+              { href: "/founders", label: "Founders Directory" },
               { href: "/news", label: "News Feed" },
               { href: "/about", label: "About" },
-              { href: "/submit", label: "Submit a Company" },
+              { href: "/submit", label: "Submit Your Company" },
             ].map(({ href, label }) => (
               <li>
                 <a
@@ -38,9 +38,8 @@ const currentYear = new Date().getFullYear();
       <div>
         <h3 class="text-sm font-semibold text-zinc-300">Stay Updated</h3>
         <p class="mt-3 text-sm text-zinc-400">
-          Cybersecurity startup news delivered to your inbox.
+          Women in cyber — news and new founders, delivered to your inbox.
         </p>
-        <!-- Newsletter signup placeholder -->
         <form class="mt-3 flex gap-2">
           <input
             type="email"

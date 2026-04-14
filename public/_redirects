@@ -1,0 +1,2 @@
+/directory/* /founders/:splat 301
+/directory /founders 301

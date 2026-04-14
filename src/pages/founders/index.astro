@@ -1,0 +1,136 @@
+---
+import Base from "@/layouts/Base.astro";
+import { getCollection } from "astro:content";
+
+const allCompanies = await getCollection("companies");
+const founders = allCompanies.sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
+);
+
+const allSectors = [
+  ...new Set(founders.flatMap((c) => c.data.category)),
+].sort();
+---
+
+<Base
+  title="Founders Directory"
+  description="Browse all women founders and leaders in the CyberInventors directory."
+>
+  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+    <div class="mb-10">
+      <h1 class="text-4xl font-extrabold text-white">Founders Directory</h1>
+      <p class="mt-2 text-zinc-400">
+        {founders.length} women founders and leaders building in cybersecurity.
+      </p>
+    </div>
+
+    <!-- Sector filters -->
+    <div class="mb-8 flex flex-wrap gap-2">
+      <span class="rounded-full bg-brand-600 px-3 py-1 text-xs font-medium text-white">
+        All
+      </span>
+      {
+        allSectors.map((sector) => (
+          <span class="cursor-pointer rounded-full border border-zinc-700 px-3 py-1 text-xs font-medium text-zinc-400 transition-colors hover:border-zinc-500 hover:text-white">
+            {sector}
+          </span>
+        ))
+      }
+    </div>
+
+    {
+      founders.length > 0 ? (
+        <div class="overflow-hidden rounded-xl border border-zinc-800">
+          <table class="w-full text-sm">
+            <thead class="border-b border-zinc-800 bg-zinc-900">
+              <tr>
+                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                  Founder
+                </th>
+                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                  Company
+                </th>
+                <th class="hidden px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500 sm:table-cell">
+                  Sector
+                </th>
+                <th class="hidden px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500 md:table-cell">
+                  HQ
+                </th>
+                <th class="hidden px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500 lg:table-cell">
+                  Founded
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-zinc-800/60 bg-zinc-950">
+              {founders.map((entry) => {
+                const slug = entry.id.replace(/\.(md|mdx)$/, "");
+                const primaryFounder =
+                  entry.data.founders?.[0] ?? "—";
+                const initials = primaryFounder !== "—"
+                  ? primaryFounder.split(" ").map((p: string) => p[0]).join("").toUpperCase().slice(0, 2)
+                  : entry.data.name.slice(0, 2).toUpperCase();
+
+                return (
+                  <tr class="group transition-colors hover:bg-zinc-900">
+                    <td class="px-4 py-4">
+                      <a href={`/founders/${slug}`} class="flex items-center gap-3">
+                        <div class="flex size-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-600 to-cyan-600 text-xs font-bold text-white">
+                          {initials}
+                        </div>
+                        <div>
+                          <p class="font-semibold text-white group-hover:text-brand-400 transition-colors">
+                            {primaryFounder}
+                          </p>
+                          {entry.data.founders && entry.data.founders.length > 1 && (
+                            <p class="text-xs text-zinc-500">
+                              +{entry.data.founders.length - 1} co-founder{entry.data.founders.length > 2 ? "s" : ""}
+                            </p>
+                          )}
+                        </div>
+                      </a>
+                    </td>
+                    <td class="px-4 py-4">
+                      <a href={`/founders/${slug}`} class="font-medium text-zinc-300 hover:text-white transition-colors">
+                        {entry.data.name}
+                      </a>
+                      {entry.data.stage && (
+                        <p class="mt-0.5 text-xs capitalize text-zinc-500">
+                          {entry.data.stage}
+                        </p>
+                      )}
+                    </td>
+                    <td class="hidden px-4 py-4 sm:table-cell">
+                      <div class="flex flex-wrap gap-1">
+                        {entry.data.category.slice(0, 2).map((cat: string) => (
+                          <span class="rounded bg-zinc-800 px-1.5 py-0.5 text-xs text-zinc-400">
+                            {cat}
+                          </span>
+                        ))}
+                      </div>
+                    </td>
+                    <td class="hidden px-4 py-4 text-zinc-400 md:table-cell">
+                      {entry.data.location ?? "—"}
+                    </td>
+                    <td class="hidden px-4 py-4 text-zinc-400 lg:table-cell">
+                      {entry.data.founded ?? "—"}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div class="rounded-xl border border-dashed border-zinc-700 py-24 text-center">
+          <p class="text-zinc-500">No founders in the directory yet.</p>
+          <a
+            href="/submit"
+            class="mt-4 inline-block text-sm text-brand-400 hover:text-brand-300"
+          >
+            Be the first to submit →
+          </a>
+        </div>
+      )
+    }
+  </div>
+</Base>
