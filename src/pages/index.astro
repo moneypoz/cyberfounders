@@ -1,0 +1,98 @@
+---
+import Base from "@/layouts/Base.astro";
+import CompanyCard from "@/components/CompanyCard.astro";
+import NewsReel from "@/components/NewsReel.astro";
+import { getCollection } from "astro:content";
+
+const allCompanies = await getCollection("companies");
+const featuredCompanies = allCompanies
+  .filter((c) => c.data.featured)
+  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+
+// News items are fetched at build time by the Cloudflare Worker and stored as KV / JSON.
+// For now we render an empty state; swap in real data once the worker is wired up.
+const newsItems: Array<{
+  title: string;
+  link: string;
+  pubDate: string;
+  source: string;
+  summary?: string;
+}> = [];
+---
+
+<Base title="Home" description="Discover cybersecurity startups shaping the future of digital defense.">
+  <!-- Hero -->
+  <section class="relative overflow-hidden border-b border-zinc-800 bg-zinc-950 py-24">
+    <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-brand-900/20 via-transparent to-transparent" />
+    <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <h1 class="text-5xl font-extrabold leading-tight tracking-tight">
+          <span class="text-gradient">Cybersecurity Startups</span><br />
+          Worth Watching
+        </h1>
+        <p class="mt-6 text-lg text-zinc-400">
+          CyberInventors tracks the most promising companies defending the
+          digital world — from zero-day hunters to AI-native SOC tools.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a
+            href="/directory"
+            class="rounded-lg bg-brand-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-brand-500"
+          >
+            Browse Directory
+          </a>
+          <a
+            href="/submit"
+            class="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-zinc-300 transition-colors hover:border-zinc-500 hover:text-white"
+          >
+            Submit a Company
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 gap-12 lg:grid-cols-3">
+      <!-- Featured Companies -->
+      <section class="lg:col-span-2">
+        <div class="mb-6 flex items-center justify-between">
+          <h2 class="text-xl font-bold text-white">Featured Companies</h2>
+          <a href="/directory" class="text-sm text-brand-400 hover:text-brand-300">
+            View all →
+          </a>
+        </div>
+        {
+          featuredCompanies.length > 0 ? (
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {featuredCompanies.slice(0, 4).map((company) => (
+                <CompanyCard
+                  name={company.data.name}
+                  slug={company.id.replace(/\.(md|mdx)$/, "")}
+                  tagline={company.data.tagline}
+                  category={company.data.category}
+                  stage={company.data.stage}
+                  location={company.data.location}
+                  featured={company.data.featured}
+                />
+              ))}
+            </div>
+          ) : (
+            <p class="text-zinc-500">No featured companies yet.</p>
+          )
+        }
+      </section>
+
+      <!-- News Sidebar -->
+      <section>
+        <div class="mb-6 flex items-center justify-between">
+          <h2 class="text-xl font-bold text-white">Latest News</h2>
+          <a href="/news" class="text-sm text-brand-400 hover:text-brand-300">
+            More →
+          </a>
+        </div>
+        <NewsReel items={newsItems} limit={8} />
+      </section>
+    </div>
+  </div>
+</Base>

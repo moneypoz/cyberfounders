@@ -1,0 +1,136 @@
+---
+import Base from "@/layouts/Base.astro";
+---
+
+<Base title="Submit a Company" description="Submit a cybersecurity startup to the CyberInventors directory.">
+  <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 lg:px-8">
+    <h1 class="text-4xl font-extrabold text-white">Submit a Company</h1>
+    <p class="mt-3 text-zinc-400">
+      Know a cybersecurity startup we should be tracking? Fill out the form
+      below and we'll review it for inclusion.
+    </p>
+
+    <form
+      class="mt-10 space-y-6"
+      method="POST"
+      action="/api/submit"
+    >
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div>
+          <label for="company-name" class="block text-sm font-medium text-zinc-300">
+            Company Name <span class="text-red-400">*</span>
+          </label>
+          <input
+            id="company-name"
+            name="name"
+            type="text"
+            required
+            class="mt-1 w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-brand-500 focus:outline-none"
+            placeholder="Acme Security Inc."
+          />
+        </div>
+
+        <div>
+          <label for="website" class="block text-sm font-medium text-zinc-300">
+            Website <span class="text-red-400">*</span>
+          </label>
+          <input
+            id="website"
+            name="website"
+            type="url"
+            required
+            class="mt-1 w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-brand-500 focus:outline-none"
+            placeholder="https://acmesecurity.com"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label for="tagline" class="block text-sm font-medium text-zinc-300">
+          One-line Description <span class="text-red-400">*</span>
+        </label>
+        <input
+          id="tagline"
+          name="tagline"
+          type="text"
+          required
+          maxlength="120"
+          class="mt-1 w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-brand-500 focus:outline-none"
+          placeholder="AI-native threat detection for cloud workloads"
+        />
+      </div>
+
+      <div>
+        <label for="category" class="block text-sm font-medium text-zinc-300">
+          Category / Tags
+        </label>
+        <input
+          id="category"
+          name="category"
+          type="text"
+          class="mt-1 w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-brand-500 focus:outline-none"
+          placeholder="EDR, AI/ML, Cloud Security (comma-separated)"
+        />
+      </div>
+
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div>
+          <label for="stage" class="block text-sm font-medium text-zinc-300">
+            Funding Stage
+          </label>
+          <select
+            id="stage"
+            name="stage"
+            class="mt-1 w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:border-brand-500 focus:outline-none"
+          >
+            <option value="">Unknown</option>
+            <option value="pre-seed">Pre-seed</option>
+            <option value="seed">Seed</option>
+            <option value="series-a">Series A</option>
+            <option value="series-b">Series B</option>
+            <option value="growth">Growth</option>
+            <option value="public">Public</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="location" class="block text-sm font-medium text-zinc-300">
+            Location
+          </label>
+          <input
+            id="location"
+            name="location"
+            type="text"
+            class="mt-1 w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-brand-500 focus:outline-none"
+            placeholder="San Francisco, CA"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label for="submitter-email" class="block text-sm font-medium text-zinc-300">
+          Your Email (optional — for follow-up)
+        </label>
+        <input
+          id="submitter-email"
+          name="submitterEmail"
+          type="email"
+          class="mt-1 w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-brand-500 focus:outline-none"
+          placeholder="you@example.com"
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="w-full rounded-lg bg-brand-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-brand-500"
+      >
+        Submit for Review
+      </button>
+
+      <p class="text-center text-xs text-zinc-600">
+        Submissions are reviewed manually. We'll add approved companies within a
+        few days.
+      </p>
+    </form>
+  </div>
+</Base>

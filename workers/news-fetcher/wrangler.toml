@@ -1,0 +1,15 @@
+name = "cyberinventors-news-fetcher"
+main = "index.ts"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[kv_namespaces]]
+binding = "NEWS_CACHE"
+id = "8bf0b3d9270e4f5db3ac41d802816e9b"
+preview_id = "2002f0faed384be39aa5600c042b48cf"
+
+[triggers]
+crons = ["0 * * * *"]  # Every hour
+
+# [secrets]
+# NEWS_REFRESH_SECRET = "set via: wrangler secret put NEWS_REFRESH_SECRET"

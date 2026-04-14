@@ -1,0 +1,81 @@
+---
+interface Props {
+  name: string;
+  slug: string;
+  tagline: string;
+  category: string[];
+  stage?: string;
+  location?: string;
+  featured?: boolean;
+}
+
+const { name, slug, tagline, category, stage, location, featured = false } =
+  Astro.props;
+
+const stageColors: Record<string, string> = {
+  "pre-seed": "bg-zinc-700 text-zinc-300",
+  seed: "bg-emerald-900 text-emerald-300",
+  "series-a": "bg-blue-900 text-blue-300",
+  "series-b": "bg-violet-900 text-violet-300",
+  growth: "bg-orange-900 text-orange-300",
+  public: "bg-yellow-900 text-yellow-300",
+};
+---
+
+<a href={`/directory/${slug}`} class="group block">
+  <article
+    class:list={[
+      "card-hover relative flex flex-col gap-3",
+      featured && "ring-1 ring-brand-500/50",
+    ]}
+  >
+    {
+      featured && (
+        <span class="absolute right-4 top-4 rounded-full bg-brand-600/20 px-2 py-0.5 text-xs font-medium text-brand-400">
+          Featured
+        </span>
+      )
+    }
+
+    <div class="flex items-start gap-3">
+      <!-- Logo placeholder -->
+      <div
+        class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-zinc-800 text-sm font-bold text-zinc-400"
+      >
+        {name.charAt(0)}
+      </div>
+      <div class="min-w-0">
+        <h3
+          class="truncate font-semibold text-white group-hover:text-brand-400 transition-colors"
+        >
+          {name}
+        </h3>
+        {location && <p class="text-xs text-zinc-500">{location}</p>}
+      </div>
+    </div>
+
+    <p class="text-sm leading-relaxed text-zinc-400">{tagline}</p>
+
+    <div class="flex flex-wrap items-center gap-2">
+      {
+        stage && (
+          <span
+            class:list={[
+              "rounded-full px-2 py-0.5 text-xs font-medium capitalize",
+              stageColors[stage] ?? "bg-zinc-700 text-zinc-300",
+            ]}
+          >
+            {stage}
+          </span>
+        )
+      }
+      {
+        category.slice(0, 3).map((cat) => (
+          <span class="rounded-full bg-zinc-800 px-2 py-0.5 text-xs text-zinc-400">
+            {cat}
+          </span>
+        ))
+      }
+    </div>
+  </article>
+</a>

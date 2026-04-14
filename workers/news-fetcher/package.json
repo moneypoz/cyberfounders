@@ -1,0 +1,15 @@
+{
+  "name": "cyberinventors-news-fetcher",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250409.0",
+    "typescript": "^5.8.3",
+    "wrangler": "^4.10.0"
+  }
+}

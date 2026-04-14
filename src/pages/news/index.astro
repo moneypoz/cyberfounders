@@ -1,0 +1,39 @@
+---
+import Base from "@/layouts/Base.astro";
+import NewsReel from "@/components/NewsReel.astro";
+
+// News items are populated by the Cloudflare Worker (workers/news-fetcher).
+// At build time the worker stores fetched RSS items in KV / R2 as JSON.
+// Swap the empty array below for a fetch() call once the worker is deployed.
+const newsItems: Array<{
+  title: string;
+  link: string;
+  pubDate: string;
+  source: string;
+  summary?: string;
+}> = [];
+---
+
+<Base title="News" description="Latest cybersecurity startup news from across the web.">
+  <div class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+    <div class="mb-10">
+      <h1 class="text-4xl font-extrabold text-white">Cybersecurity News</h1>
+      <p class="mt-2 text-zinc-400">
+        Aggregated from top security media, updated automatically.
+      </p>
+    </div>
+
+    {
+      newsItems.length > 0 ? (
+        <NewsReel items={newsItems} limit={50} />
+      ) : (
+        <div class="rounded-xl border border-dashed border-zinc-700 py-24 text-center">
+          <p class="text-zinc-500">News feed coming soon.</p>
+          <p class="mt-2 text-xs text-zinc-600">
+            The Cloudflare Worker news fetcher will populate this page.
+          </p>
+        </div>
+      )
+    }
+  </div>
+</Base>
