@@ -6,8 +6,7 @@ workers/news-fetcher/node_modules/
 dist/
 .astro/
 
-# Environment
-.env
+# Environment — .env is committed (no secrets); local overrides are not
 .env.local
 .env.*.local
 .dev.vars

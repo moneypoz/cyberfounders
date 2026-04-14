@@ -2,16 +2,33 @@
 import Base from "@/layouts/Base.astro";
 import NewsReel from "@/components/NewsReel.astro";
 
-// News items are populated by the Cloudflare Worker (workers/news-fetcher).
-// At build time the worker stores fetched RSS items in KV / R2 as JSON.
-// Swap the empty array below for a fetch() call once the worker is deployed.
-const newsItems: Array<{
+interface NewsItem {
   title: string;
   link: string;
   pubDate: string;
   source: string;
   summary?: string;
-}> = [];
+}
+
+const NEWS_API_URL = import.meta.env.NEWS_API_URL;
+
+let newsItems: NewsItem[] = [];
+let fetchError: string | null = null;
+
+if (NEWS_API_URL) {
+  try {
+    const res = await fetch(`${NEWS_API_URL}/news.json`);
+    if (res.ok) {
+      newsItems = await res.json();
+    } else {
+      fetchError = `Worker responded ${res.status}`;
+    }
+  } catch (e) {
+    fetchError = e instanceof Error ? e.message : "Unknown fetch error";
+  }
+} else {
+  fetchError = "NEWS_API_URL is not set";
+}
 ---
 
 <Base title="News" description="Latest cybersecurity startup news from across the web.">
@@ -24,13 +41,18 @@ const newsItems: Array<{
     </div>
 
     {
-      newsItems.length > 0 ? (
+      fetchError ? (
+        <div class="rounded-xl border border-dashed border-zinc-700 py-24 text-center">
+          <p class="text-zinc-500">News feed unavailable at build time.</p>
+          <p class="mt-2 text-xs text-zinc-600">{fetchError}</p>
+        </div>
+      ) : newsItems.length > 0 ? (
         <NewsReel items={newsItems} limit={50} />
       ) : (
         <div class="rounded-xl border border-dashed border-zinc-700 py-24 text-center">
-          <p class="text-zinc-500">News feed coming soon.</p>
+          <p class="text-zinc-500">No news items yet.</p>
           <p class="mt-2 text-xs text-zinc-600">
-            The Cloudflare Worker news fetcher will populate this page.
+            The worker fetches RSS feeds hourly — check back soon.
           </p>
         </div>
       )
