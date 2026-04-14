@@ -15,6 +15,7 @@ const companies = defineCollection({
       .optional(),
     category: z.array(z.string()),
     founders: z.array(z.string()).optional(),
+    photo: z.string().optional(),
     featured: z.boolean().default(false),
     approved: z.boolean().default(false),
     publishedAt: z.date(),

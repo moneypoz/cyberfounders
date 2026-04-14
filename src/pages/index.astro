@@ -3,26 +3,25 @@ import Base from "@/layouts/Base.astro";
 import FounderCard from "@/components/FounderCard.astro";
 import NewsReel from "@/components/NewsReel.astro";
 import { getCollection } from "astro:content";
+import { filterNewsForDirectory, type NewsItem } from "@/lib/filterNews";
 
 const allCompanies = await getCollection("companies");
 const featuredCompanies = allCompanies
   .filter((c) => c.data.featured)
   .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
 
-interface NewsItem {
-  title: string;
-  link: string;
-  pubDate: string;
-  source: string;
-  summary?: string;
-}
+const companyNames = allCompanies.map((c) => c.data.name);
+const founderNames = allCompanies.flatMap((c) => c.data.founders ?? []);
 
 let newsItems: NewsItem[] = [];
 const NEWS_API_URL = import.meta.env.NEWS_API_URL;
 if (NEWS_API_URL) {
   try {
     const res = await fetch(`${NEWS_API_URL}/news.json`);
-    if (res.ok) newsItems = await res.json();
+    if (res.ok) {
+      const all: NewsItem[] = await res.json();
+      newsItems = filterNewsForDirectory(all, companyNames, founderNames);
+    }
   } catch {
     // silently degrade — sidebar shows empty state
   }
@@ -88,6 +87,7 @@ if (NEWS_API_URL) {
                   stage={company.data.stage}
                   location={company.data.location}
                   featured={company.data.featured}
+                  photo={company.data.photo}
                 />
               ))}
             </div>

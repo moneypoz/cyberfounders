@@ -74,9 +74,18 @@ const allSectors = [
                   <tr class="group transition-colors hover:bg-zinc-900">
                     <td class="px-4 py-4">
                       <a href={`/founders/${slug}`} class="flex items-center gap-3">
-                        <div class="flex size-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-600 to-cyan-600 text-xs font-bold text-white">
-                          {initials}
-                        </div>
+                        {entry.data.photo ? (
+                          <img
+                            src={entry.data.photo}
+                            alt={`${primaryFounder} headshot`}
+                            class="size-9 shrink-0 rounded-full object-cover object-top ring-1 ring-zinc-700"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div class="flex size-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-600 to-cyan-600 text-xs font-bold text-white">
+                            {initials}
+                          </div>
+                        )}
                         <div>
                           <p class="font-semibold text-white group-hover:text-brand-400 transition-colors">
                             {primaryFounder}

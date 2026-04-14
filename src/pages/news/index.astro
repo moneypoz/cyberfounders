@@ -1,14 +1,12 @@
 ---
 import Base from "@/layouts/Base.astro";
 import NewsReel from "@/components/NewsReel.astro";
+import { getCollection } from "astro:content";
+import { filterNewsForDirectory, type NewsItem } from "@/lib/filterNews";
 
-interface NewsItem {
-  title: string;
-  link: string;
-  pubDate: string;
-  source: string;
-  summary?: string;
-}
+const allCompanies = await getCollection("companies");
+const companyNames = allCompanies.map((c) => c.data.name);
+const founderNames = allCompanies.flatMap((c) => c.data.founders ?? []);
 
 const NEWS_API_URL = import.meta.env.NEWS_API_URL;
 
@@ -19,7 +17,8 @@ if (NEWS_API_URL) {
   try {
     const res = await fetch(`${NEWS_API_URL}/news.json`);
     if (res.ok) {
-      newsItems = await res.json();
+      const all: NewsItem[] = await res.json();
+      newsItems = filterNewsForDirectory(all, companyNames, founderNames);
     } else {
       fetchError = `Worker responded ${res.status}`;
     }
@@ -31,12 +30,12 @@ if (NEWS_API_URL) {
 }
 ---
 
-<Base title="News" description="Latest cybersecurity startup news from across the web.">
+<Base title="News" description="Latest news about women founders and companies in the CyberInventors directory.">
   <div class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
     <div class="mb-10">
-      <h1 class="text-4xl font-extrabold text-white">Cybersecurity News</h1>
+      <h1 class="text-4xl font-extrabold text-white">Founder News</h1>
       <p class="mt-2 text-zinc-400">
-        Aggregated from top security media, updated automatically.
+        Coverage of the founders and companies in this directory, aggregated automatically.
       </p>
     </div>
 
@@ -50,9 +49,10 @@ if (NEWS_API_URL) {
         <NewsReel items={newsItems} limit={50} />
       ) : (
         <div class="rounded-xl border border-dashed border-zinc-700 py-24 text-center">
-          <p class="text-zinc-500">No news items yet.</p>
+          <p class="text-zinc-500">No recent coverage found for these founders.</p>
           <p class="mt-2 text-xs text-zinc-600">
-            The worker fetches RSS feeds hourly — check back soon.
+            The feed refreshes hourly — check back soon, or
+            <a href="/submit" class="text-brand-400 hover:text-brand-300"> add more founders</a>.
           </p>
         </div>
       )

@@ -5,6 +5,7 @@ description: "Sonder Security guides organizations through DevSecOps transformat
 website: "https://sondersecurity.com"
 category: ["DevSecOps", "Application Security", "Security Consulting", "Public Sector"]
 founders: ["Camille Stewart Gloster"]
+photo: "/founders/camille-stewart-gloster.jpg"
 featured: true
 approved: true
 publishedAt: 2024-09-01

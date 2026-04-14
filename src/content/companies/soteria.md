@@ -7,6 +7,7 @@ founded: 2014
 location: "Charleston, SC"
 category: ["Consulting", "Incident Response", "Advisory", "Threat Detection", "Government"]
 founders: ["Pam Nigro"]
+photo: "/founders/pam-nigro.png"
 featured: true
 approved: true
 publishedAt: 2024-09-01

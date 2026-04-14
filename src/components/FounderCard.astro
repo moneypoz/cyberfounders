@@ -8,6 +8,7 @@ interface Props {
   stage?: string;
   location?: string;
   featured?: boolean;
+  photo?: string;
 }
 
 const {
@@ -19,6 +20,7 @@ const {
   stage,
   location,
   featured = false,
+  photo,
 } = Astro.props;
 
 const stageColors: Record<string, string> = {
@@ -30,7 +32,6 @@ const stageColors: Record<string, string> = {
   public: "bg-yellow-900 text-yellow-300",
 };
 
-// Derive initials from founder name (up to 2 chars)
 const initials = founderName
   .split(" ")
   .map((p) => p[0])
@@ -54,21 +55,26 @@ const initials = founderName
       )
     }
 
-    <!-- Founder avatar -->
-    <div
-      class="flex size-14 items-center justify-center rounded-full bg-gradient-to-br from-brand-600 to-cyan-600 text-lg font-bold text-white shadow-lg"
-    >
-      {initials}
-    </div>
+    <!-- Founder avatar: photo if available, initials otherwise -->
+    {
+      photo ? (
+        <img
+          src={photo}
+          alt={`${founderName} headshot`}
+          class="size-14 rounded-full object-cover object-top shadow-lg ring-2 ring-zinc-700"
+          loading="lazy"
+        />
+      ) : (
+        <div class="flex size-14 items-center justify-center rounded-full bg-gradient-to-br from-brand-600 to-cyan-600 text-lg font-bold text-white shadow-lg">
+          {initials}
+        </div>
+      )
+    }
 
-    <!-- Founder name — primary -->
     <div>
-      <h3
-        class="text-lg font-bold text-white group-hover:text-brand-400 transition-colors leading-tight"
-      >
+      <h3 class="text-lg font-bold text-white group-hover:text-brand-400 transition-colors leading-tight">
         {founderName}
       </h3>
-      <!-- Company name — secondary -->
       <p class="mt-0.5 text-sm font-medium text-zinc-400">
         {companyName}
         {location && <span class="text-zinc-600"> · {location}</span>}

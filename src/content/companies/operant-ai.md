@@ -8,6 +8,7 @@ location: "California"
 stage: "series-a"
 category: ["AI Security", "Runtime Security", "API Security", "Cloud Security", "LLM Security"]
 founders: ["Dr. Priyanka Tembey", "Vrajesh Bhavsar"]
+photo: "/founders/priyanka-tembey.avif"
 featured: false
 approved: true
 publishedAt: 2024-09-01

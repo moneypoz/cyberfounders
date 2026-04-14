@@ -8,6 +8,7 @@ location: "Seattle, WA"
 stage: "series-a"
 category: ["Container Security", "Kubernetes Security", "AI Security", "Cloud Security", "Workload Isolation"]
 founders: ["Emily Long", "Ariadne Conill", "Alex Zenla"]
+photo: "/founders/emily-long.jpg"
 featured: false
 approved: true
 publishedAt: 2024-09-01
